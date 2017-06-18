@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Pear</string>
+    <string name="base_url">http://119.29.77.37/Fungrouping/</string>
+    <string name="account">账号：</string>
+</resources>
