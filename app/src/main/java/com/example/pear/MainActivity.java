@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,18 +30,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.pear.gson.CodeResponse;
 import com.google.gson.Gson;
+import com.zhouwei.mzbanner.MZBannerView;
+import com.zhouwei.mzbanner.holder.MZHolderCreator;
+import com.zhouwei.mzbanner.holder.MZViewHolder;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
@@ -52,12 +60,14 @@ public class MainActivity extends AppCompatActivity {
     public static final int TAKE_PHOTO = 1;
     public static final int CHOOSE_PHOTO = 2;
     private static final String TAG = "MainActivity";
+    public static final int RES[]=new int[]{R.drawable.cat,R.drawable.ear,R.drawable.fish,R.drawable.qian,R.drawable.sea};
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private CircleImageView heardImage;
     private ProgressDialog progressDialog;
+    private MZBannerView mzBannerView;
 
     private Uri imageUri;
     private SharedPreferences pref;
@@ -73,7 +83,50 @@ public class MainActivity extends AppCompatActivity {
         initToolBar();
         initDrawerLayout();
         initNavigationView();
+        initMZBanner();//执行banner相关的操作
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mzBannerView.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mzBannerView.start();
+    }
+
+    private void initMZBanner() {
+        mzBannerView= (MZBannerView) findViewById(R.id.banner);
+        List<Integer> list=new ArrayList<>();
+        for (int i=0;i<RES.length;i++){
+            list.add(RES[i]);
+        }
+        mzBannerView.setIndicatorVisible(true);
+        mzBannerView.setPages(list, new MZHolderCreator<BannerViewHolder>() {
+            @Override
+            public BannerViewHolder createViewHolder() {
+                return new BannerViewHolder();
+            }
+        });
+    }
+
+    public static class BannerViewHolder implements MZViewHolder<Integer>{
+        private ImageView mImageView;
+        @Override
+        public View createView(Context context) {
+            View view= LayoutInflater.from(context).inflate(R.layout.banner_item,null);
+            mImageView= (ImageView) view.findViewById(R.id.banner_image);
+            return view;
+        }
+
+        @Override
+        public void onBind(Context context, int i, Integer integer) {
+            mImageView.setImageResource(integer);
+        }
     }
 
     private void initNavigationView() {
@@ -362,6 +415,7 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.setMessage("头像正在上传...");
             progressDialog.setCanceledOnTouchOutside(false);
         }
+        mzBannerView.pause();
         progressDialog.show();
     }
 }

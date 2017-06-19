@@ -7,7 +7,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.example.pear"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -35,6 +35,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'org.litepal.android:core:1.4.1'
     compile 'com.jakewharton:butterknife:8.6.0'
+    compile 'com.github.pinguo-zhouwei:MZBannerView:v1.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     testCompile 'junit:junit:4.12'
 }
